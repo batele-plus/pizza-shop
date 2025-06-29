@@ -7,11 +7,19 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
 
-    // Convert URLSearchParams to object for Zod validation
-    const queryParams = Object.fromEntries(searchParams.entries())
+    // Extract query parameters with proper null handling
+    const queryParams = {
+      limit: searchParams.get("limit"),
+      offset: searchParams.get("offset"),
+      popular: searchParams.get("popular"),
+    }
+
+    console.log("Raw query params:", queryParams)
 
     // Validate query parameters with Zod
     const validatedQuery = itemsQuerySchema.parse(queryParams)
+
+    console.log("Validated query:", validatedQuery)
 
     // Fetch items from database
     const result = await getPizzaItems(validatedQuery)

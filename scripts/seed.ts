@@ -5,7 +5,7 @@ import { pizzaItems } from "../lib/db/schema"
 const sql = neon(process.env.DATABASE_URL!)
 const db = drizzle(sql)
 
-const seedData = [
+const pizzaData = [
   {
     name: "Margherita Classic",
     description: "Fresh mozzarella, tomato sauce, basil, olive oil",
@@ -30,35 +30,28 @@ const seedData = [
   {
     name: "Hawaiian Paradise",
     description: "Ham, pineapple, mozzarella, tomato sauce",
-    price: "18.99",
+    price: "20.99",
     image: "/placeholder.svg?height=300&width=300",
     popular: false,
   },
   {
     name: "Veggie Supreme",
     description: "Bell peppers, mushrooms, onions, olives, tomatoes",
-    price: "17.99",
+    price: "18.99",
     image: "/placeholder.svg?height=300&width=300",
     popular: false,
   },
   {
     name: "BBQ Chicken",
     description: "Grilled chicken, BBQ sauce, red onions, cilantro",
-    price: "21.99",
+    price: "22.99",
     image: "/placeholder.svg?height=300&width=300",
     popular: true,
   },
   {
     name: "White Sauce Delight",
-    description: "Garlic white sauce, ricotta, mozzarella, spinach",
-    price: "20.99",
-    image: "/placeholder.svg?height=300&width=300",
-    popular: false,
-  },
-  {
-    name: "Spicy Italian",
-    description: "Spicy salami, pepperoni, jalapeños, hot sauce",
-    price: "22.99",
+    description: "White sauce, ricotta, mozzarella, garlic, spinach",
+    price: "21.99",
     image: "/placeholder.svg?height=300&width=300",
     popular: false,
   },
@@ -71,8 +64,29 @@ const seedData = [
   },
   {
     name: "Buffalo Chicken",
-    description: "Buffalo chicken, blue cheese, celery, ranch drizzle",
+    description: "Buffalo chicken, blue cheese, celery, hot sauce",
+    price: "24.99",
+    image: "/placeholder.svg?height=300&width=300",
+    popular: false,
+  },
+  {
+    name: "Four Cheese",
+    description: "Mozzarella, parmesan, gorgonzola, fontina",
+    price: "20.99",
+    image: "/placeholder.svg?height=300&width=300",
+    popular: false,
+  },
+  {
+    name: "Spicy Italian",
+    description: "Spicy salami, pepperoni, jalapeños, red pepper flakes",
     price: "23.99",
+    image: "/placeholder.svg?height=300&width=300",
+    popular: true,
+  },
+  {
+    name: "Mushroom Truffle",
+    description: "Mixed mushrooms, truffle oil, arugula, parmesan",
+    price: "26.99",
     image: "/placeholder.svg?height=300&width=300",
     popular: false,
   },
@@ -80,34 +94,30 @@ const seedData = [
 
 async function seed() {
   try {
-    console.log("🌱 Seeding database...")
-
-    // Create table if it doesn't exist
-    await sql`
-      CREATE TABLE IF NOT EXISTS pizza_items (
-        id SERIAL PRIMARY KEY,
-        name TEXT NOT NULL,
-        description TEXT NOT NULL,
-        price DECIMAL(10,2) NOT NULL,
-        image TEXT NOT NULL,
-        popular BOOLEAN DEFAULT FALSE NOT NULL,
-        created_at TIMESTAMP DEFAULT NOW() NOT NULL,
-        updated_at TIMESTAMP DEFAULT NOW() NOT NULL
-      )
-    `
+    console.log("🌱 Starting database seed...")
 
     // Clear existing data
-    await sql`DELETE FROM pizza_items`
+    console.log("🗑️  Clearing existing pizza items...")
+    await db.delete(pizzaItems)
 
-    // Insert seed data
-    for (const item of seedData) {
-      await db.insert(pizzaItems).values(item)
-    }
+    // Insert new data
+    console.log("📝 Inserting pizza items...")
+    const insertedItems = await db.insert(pizzaItems).values(pizzaData).returning()
 
-    console.log("✅ Database seeded successfully!")
-    console.log(`📊 Inserted ${seedData.length} pizza items`)
+    console.log(`✅ Successfully seeded ${insertedItems.length} pizza items!`)
+
+    // Show summary
+    const popularCount = insertedItems.filter((item) => item.popular).length
+    const regularCount = insertedItems.length - popularCount
+
+    console.log(`📊 Summary:`)
+    console.log(`   • Popular pizzas: ${popularCount}`)
+    console.log(`   • Regular pizzas: ${regularCount}`)
+    console.log(`   • Total pizzas: ${insertedItems.length}`)
+
+    process.exit(0)
   } catch (error) {
-    console.error("❌ Error seeding database:", error)
+    console.error("❌ Seed failed:", error)
     process.exit(1)
   }
 }

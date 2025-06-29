@@ -39,7 +39,7 @@ const mockPizzaItems = [
     id: 4,
     name: "Hawaiian Paradise",
     description: "Ham, pineapple, mozzarella, tomato sauce",
-    price: "18.99",
+    price: "20.99",
     image: "/placeholder.svg?height=300&width=300",
     popular: false,
     createdAt: new Date(),
@@ -49,7 +49,7 @@ const mockPizzaItems = [
     id: 5,
     name: "Veggie Supreme",
     description: "Bell peppers, mushrooms, onions, olives, tomatoes",
-    price: "17.99",
+    price: "18.99",
     image: "/placeholder.svg?height=300&width=300",
     popular: false,
     createdAt: new Date(),
@@ -59,7 +59,7 @@ const mockPizzaItems = [
     id: 6,
     name: "BBQ Chicken",
     description: "Grilled chicken, BBQ sauce, red onions, cilantro",
-    price: "21.99",
+    price: "22.99",
     image: "/placeholder.svg?height=300&width=300",
     popular: true,
     createdAt: new Date(),
@@ -70,6 +70,8 @@ const mockPizzaItems = [
 export async function getPizzaItems(query: ItemsQuery) {
   const { limit, offset, popular } = query
 
+  console.log("getPizzaItems called with:", { limit, offset, popular })
+
   try {
     // Check if database is available
     if (!process.env.DATABASE_URL) {
@@ -77,28 +79,30 @@ export async function getPizzaItems(query: ItemsQuery) {
       return getMockPizzaItems(query)
     }
 
-    // Build where conditions
-    const whereConditions = []
+    console.log("Attempting database query...")
+
+    // Get total count first
+    let totalQuery = db.select({ count: count() }).from(pizzaItems)
+
     if (popular !== null) {
-      whereConditions.push(eq(pizzaItems.popular, popular))
+      totalQuery = totalQuery.where(eq(pizzaItems.popular, popular))
     }
 
-    // Get total count
-    const [totalResult] = await db
-      .select({ count: count() })
-      .from(pizzaItems)
-      .where(whereConditions.length > 0 ? whereConditions[0] : undefined)
+    const totalResult = await totalQuery
+    const total = totalResult[0]?.count || 0
 
-    const total = totalResult.count
+    console.log("Total count:", total)
 
     // Get paginated items
     let itemsQuery = db.select().from(pizzaItems)
 
-    if (whereConditions.length > 0) {
-      itemsQuery = itemsQuery.where(whereConditions[0])
+    if (popular !== null) {
+      itemsQuery = itemsQuery.where(eq(pizzaItems.popular, popular))
     }
 
     const items = await itemsQuery.limit(limit).offset(offset)
+
+    console.log("Items fetched:", items.length)
 
     const hasMore = offset + limit < total
 
@@ -119,6 +123,8 @@ export async function getPizzaItems(query: ItemsQuery) {
 function getMockPizzaItems(query: ItemsQuery) {
   const { limit, offset, popular } = query
 
+  console.log("Using mock data with query:", { limit, offset, popular })
+
   // Filter items based on popular flag
   let filteredItems = mockPizzaItems
   if (popular !== null) {
@@ -128,6 +134,8 @@ function getMockPizzaItems(query: ItemsQuery) {
   const total = filteredItems.length
   const paginatedItems = filteredItems.slice(offset, offset + limit)
   const hasMore = offset + limit < total
+
+  console.log("Mock data result:", { total, itemCount: paginatedItems.length, hasMore })
 
   return {
     items: paginatedItems,
@@ -145,8 +153,8 @@ export async function getPizzaItemById(id: number): Promise<PizzaItemType | null
       return mockPizzaItems.find((item) => item.id === id) || null
     }
 
-    const [item] = await db.select().from(pizzaItems).where(eq(pizzaItems.id, id)).limit(1)
-    return item || null
+    const result = await db.select().from(pizzaItems).where(eq(pizzaItems.id, id)).limit(1)
+    return result[0] || null
   } catch (error) {
     console.error("Database query error:", error)
     console.log("Falling back to mock data")
