@@ -1,54 +1,69 @@
 "use client"
 
-import { ItemCard, type PizzaItem } from "./item-card"
+import { ItemCard } from "./item-card"
+import { usePizzaItems } from "@/hooks/use-pizza-items"
+import { Skeleton } from "@/components/ui/skeleton"
+import { Alert, AlertDescription } from "@/components/ui/alert"
 
 interface ItemGridProps {
-  pizzas: PizzaItem[]
-  selectedItems: Array<{ id: string; quantity: number }>
-  onAddItem: (pizza: PizzaItem) => void
-  onRemoveItem: (pizzaId: string) => void
-  title: string
-  description: string
+  popular?: boolean
+  limit?: number
+  title?: string
   variant?: "popular" | "menu"
 }
 
-export function ItemGrid({
-  pizzas,
-  selectedItems,
-  onAddItem,
-  onRemoveItem,
-  title,
-  description,
-  variant = "menu",
-}: ItemGridProps) {
-  const getItemQuantity = (pizzaId: string) => {
-    const item = selectedItems.find((item) => item.id === pizzaId)
-    return item ? item.quantity : 0
-  }
+export function ItemGrid({ popular = null, limit = 10, title, variant = "menu" }: ItemGridProps) {
+  const { data, isLoading, error } = usePizzaItems({
+    popular,
+    limit,
+    offset: 0,
+  })
 
-  const gridCols = variant === "popular" ? "md:grid-cols-2 lg:grid-cols-3" : "md:grid-cols-2 lg:grid-cols-3"
-
-  return (
-    <section className={variant === "popular" ? "py-16 bg-gray-50" : ""}>
-      <div className="container mx-auto px-4">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">{title}</h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">{description}</p>
-        </div>
-
-        <div className={`grid ${gridCols} gap-8`}>
-          {pizzas.map((pizza) => (
-            <ItemCard
-              key={pizza.id}
-              pizza={pizza}
-              quantity={getItemQuantity(pizza.id)}
-              onAdd={onAddItem}
-              onRemove={onRemoveItem}
-              variant={variant}
-            />
+  if (isLoading) {
+    return (
+      <div className="space-y-4">
+        {title && <h2 className="text-2xl font-bold text-center">{title}</h2>}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {Array.from({ length: limit }).map((_, i) => (
+            <div key={i} className="space-y-3">
+              <Skeleton className="h-48 w-full rounded-lg" />
+              <Skeleton className="h-4 w-3/4" />
+              <Skeleton className="h-4 w-1/2" />
+              <div className="flex justify-between items-center">
+                <Skeleton className="h-6 w-16" />
+                <Skeleton className="h-8 w-20" />
+              </div>
+            </div>
           ))}
         </div>
       </div>
-    </section>
+    )
+  }
+
+  if (error) {
+    return (
+      <Alert variant="destructive">
+        <AlertDescription>Failed to load pizza items. Please try again later.</AlertDescription>
+      </Alert>
+    )
+  }
+
+  if (!data?.items?.length) {
+    return (
+      <div className="text-center py-8">
+        <p className="text-gray-500">No pizza items found.</p>
+      </div>
+    )
+  }
+
+  return (
+    <div className="space-y-6">
+      {title && <h2 className="text-2xl font-bold text-center">{title}</h2>}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {data.items.map((item) => (
+          <ItemCard key={item.id} item={item} variant={variant} />
+        ))}
+      </div>
+    </div>
   )
 }

@@ -1,69 +1,63 @@
 import { create } from "zustand"
 import { persist } from "zustand/middleware"
-import type { OrderItem } from "@/lib/validations/forms"
-import type { PizzaItemType } from "@/lib/validations/api"
 
-interface CartState {
-  items: OrderItem[]
-  addItem: (pizza: PizzaItemType) => void
-  removeItem: (pizzaId: string) => void
-  clearCart: () => void
-  getTotalPrice: () => number
-  getItemQuantity: (pizzaId: string) => number
+export interface CartItem {
+  id: number
+  name: string
+  price: string
+  quantity: number
+  image: string
 }
 
-export const useCartStore = create<CartState>()(
+interface CartStore {
+  items: CartItem[]
+  addItem: (item: Omit<CartItem, "quantity">) => void
+  removeItem: (id: number) => void
+  updateQuantity: (id: number, quantity: number) => void
+  clearCart: () => void
+  getTotalPrice: () => number
+  getTotalItems: () => number
+}
+
+export const useCartStore = create<CartStore>()(
   persist(
     (set, get) => ({
       items: [],
-
-      addItem: (pizza) =>
+      addItem: (item) =>
         set((state) => {
-          const existingItem = state.items.find((item) => item.id === pizza.id)
+          const existingItem = state.items.find((i) => i.id === item.id)
           if (existingItem) {
             return {
-              items: state.items.map((item) =>
-                item.id === pizza.id ? { ...item, quantity: item.quantity + 1 } : item,
-              ),
+              items: state.items.map((i) => (i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i)),
             }
           }
           return {
-            items: [
-              ...state.items,
-              {
-                id: pizza.id,
-                name: pizza.name,
-                price: pizza.price,
-                quantity: 1,
-              },
-            ],
+            items: [...state.items, { ...item, quantity: 1 }],
           }
         }),
-
-      removeItem: (pizzaId) =>
+      removeItem: (id) =>
+        set((state) => ({
+          items: state.items.filter((item) => item.id !== id),
+        })),
+      updateQuantity: (id, quantity) =>
         set((state) => {
-          const existingItem = state.items.find((item) => item.id === pizzaId)
-          if (existingItem && existingItem.quantity > 1) {
+          if (quantity <= 0) {
             return {
-              items: state.items.map((item) => (item.id === pizzaId ? { ...item, quantity: item.quantity - 1 } : item)),
+              items: state.items.filter((item) => item.id !== id),
             }
           }
           return {
-            items: state.items.filter((item) => item.id !== pizzaId),
+            items: state.items.map((item) => (item.id === id ? { ...item, quantity } : item)),
           }
         }),
-
       clearCart: () => set({ items: [] }),
-
       getTotalPrice: () => {
         const { items } = get()
-        return items.reduce((total, item) => total + item.price * item.quantity, 0)
+        return items.reduce((total, item) => total + Number.parseFloat(item.price) * item.quantity, 0)
       },
-
-      getItemQuantity: (pizzaId) => {
+      getTotalItems: () => {
         const { items } = get()
-        const item = items.find((item) => item.id === pizzaId)
-        return item ? item.quantity : 0
+        return items.reduce((total, item) => total + item.quantity, 0)
       },
     }),
     {

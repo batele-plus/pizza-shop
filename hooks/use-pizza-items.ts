@@ -2,29 +2,21 @@
 
 import { useQuery } from "@tanstack/react-query"
 import type { ItemsQuery, ItemsResponse } from "@/lib/validations/api"
-import { itemsResponseSchema } from "@/lib/validations/api"
 
 async function fetchPizzaItems(query: ItemsQuery): Promise<ItemsResponse> {
-  const params = new URLSearchParams()
+  const searchParams = new URLSearchParams()
 
-  if (query.limit !== undefined) {
-    params.append("limit", query.limit.toString())
-  }
-  if (query.offset !== undefined) {
-    params.append("offset", query.offset.toString())
-  }
-  if (query.popular !== null && query.popular !== undefined) {
-    params.append("popular", query.popular.toString())
-  }
+  if (query.limit) searchParams.set("limit", query.limit.toString())
+  if (query.offset) searchParams.set("offset", query.offset.toString())
+  if (query.popular !== null) searchParams.set("popular", query.popular.toString())
 
-  const response = await fetch(`/api/items?${params.toString()}`)
+  const response = await fetch(`/api/items?${searchParams.toString()}`)
 
   if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`)
+    throw new Error("Failed to fetch pizza items")
   }
 
-  const data = await response.json()
-  return itemsResponseSchema.parse(data)
+  return response.json()
 }
 
 export function usePizzaItems(query: ItemsQuery = {}) {

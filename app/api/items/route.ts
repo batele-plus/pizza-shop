@@ -46,3 +46,33 @@ export async function GET(request: NextRequest) {
     )
   }
 }
+
+export async function POST() {
+  return NextResponse.json(
+    {
+      error: "Method Not Allowed",
+      message: "POST method is not supported for this endpoint",
+    },
+    { status: 405 },
+  )
+}
+
+export async function PUT() {
+  return NextResponse.json(
+    {
+      error: "Method Not Allowed",
+      message: "PUT method is not supported for this endpoint",
+    },
+    { status: 405 },
+  )
+}
+
+export async function DELETE() {
+  return NextResponse.json(
+    {
+      error: "Method Not Allowed",
+      message: "DELETE method is not supported for this endpoint",
+    },
+    { status: 405 },
+  )
+}

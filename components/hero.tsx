@@ -11,54 +11,67 @@ interface HeroProps {
 
 export function Hero({ onOrderNowClick, onViewMenuClick }: HeroProps) {
   return (
-    <section className="relative bg-gradient-to-r from-red-600 to-orange-600 text-white">
-      <div className="container mx-auto px-4 py-20 lg:py-32">
-        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-          {/* Mobile: Image first, Desktop: Text first */}
-          <div className="order-2 lg:order-1 space-y-6">
-            <h1 className="text-4xl lg:text-6xl font-bold leading-tight">
-              Authentic Italian Pizza
-              <span className="block text-yellow-300">Delivered Fresh</span>
+    <section className="relative bg-gradient-to-br from-orange-50 to-red-50 py-12 md:py-20">
+      <div className="container mx-auto px-4">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-8">
+          {/* Mobile: Image first, Desktop: Content first */}
+          <div className="order-1 md:order-2 flex justify-center">
+            <div className="relative">
+              <Image
+                src="/placeholder.svg?height=300&width=300"
+                alt="Delicious Pizza"
+                width={300}
+                height={300}
+                className="w-64 h-64 sm:w-80 sm:h-80 md:w-96 md:h-96 object-cover rounded-full shadow-2xl"
+                priority
+              />
+              <div className="absolute -top-4 -right-4 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold animate-pulse">
+                Hot & Fresh!
+              </div>
+            </div>
+          </div>
+
+          <div className="order-2 md:order-1 flex-1 text-center md:text-left">
+            <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-4">
+              Authentic Italian
+              <span className="text-red-600 block">Pizza Delivered</span>
             </h1>
-            <p className="text-xl lg:text-2xl text-red-100">
-              Hand-tossed dough, premium ingredients, and traditional recipes passed down through generations.
+            <p className="text-lg md:text-xl text-gray-600 mb-6 max-w-lg">
+              Experience the taste of Italy with our handcrafted pizzas made from the finest ingredients. Fast delivery,
+              guaranteed fresh!
             </p>
-            <div className="flex flex-col sm:flex-row gap-4">
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start mb-8">
               <Button
                 size="lg"
-                className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold"
+                className="bg-red-600 hover:bg-red-700 text-white px-8 py-3 text-lg"
                 onClick={onOrderNowClick}
               >
                 Order Now
               </Button>
               <Button
-                size="lg"
                 variant="outline"
-                className="border-white text-white hover:bg-white hover:text-red-600 bg-transparent"
+                size="lg"
+                className="border-red-600 text-red-600 hover:bg-red-50 px-8 py-3 text-lg bg-transparent"
                 onClick={onViewMenuClick}
               >
                 View Menu
               </Button>
             </div>
-            <div className="flex items-center gap-4 text-yellow-300">
+
+            <div className="flex items-center justify-center md:justify-start gap-4 text-sm text-gray-600">
               <div className="flex items-center gap-1">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="w-5 h-5 fill-current" />
-                ))}
+                <div className="flex">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                  ))}
+                </div>
+                <span className="font-semibold">4.9/5</span>
               </div>
-              <span className="text-lg">4.9/5 from 2,500+ reviews</span>
-            </div>
-          </div>
-          <div className="order-1 lg:order-2 relative flex justify-center">
-            <Image
-              src="/placeholder.svg?height=400&width=400"
-              alt="Delicious Pizza"
-              width={400}
-              height={400}
-              className="rounded-full shadow-2xl w-64 h-64 sm:w-80 sm:h-80 lg:w-96 lg:h-96"
-            />
-            <div className="absolute -top-2 -right-2 lg:-top-4 lg:-right-4 bg-yellow-500 text-black px-3 py-1 lg:px-4 lg:py-2 rounded-full font-bold text-sm lg:text-lg">
-              30 min delivery!
+              <div className="h-4 w-px bg-gray-300" />
+              <span>1000+ Happy Customers</span>
+              <div className="h-4 w-px bg-gray-300" />
+              <span>30min Delivery</span>
             </div>
           </div>
         </div>

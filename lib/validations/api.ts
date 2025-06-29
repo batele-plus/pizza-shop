@@ -1,27 +1,26 @@
 import { z } from "zod"
 
-export const pizzaItemSchema = z.object({
-  id: z.string(),
-  name: z.string().min(1, "Name is required"),
-  description: z.string().min(1, "Description is required"),
-  price: z.number().positive("Price must be positive"),
-  image: z.string().url("Invalid image URL"),
-  popular: z.boolean().optional().default(false),
-})
-
 export const itemsQuerySchema = z.object({
-  limit: z
-    .string()
-    .optional()
-    .transform((val) => (val ? Math.min(Math.max(Number.parseInt(val, 10) || 10, 1), 100) : 10)),
-  offset: z
-    .string()
-    .optional()
-    .transform((val) => (val ? Math.max(Number.parseInt(val, 10) || 0, 0) : 0)),
+  limit: z.coerce.number().min(1).max(100).default(10),
+  offset: z.coerce.number().min(0).default(0),
   popular: z
     .string()
     .optional()
-    .transform((val) => (val === "true" ? true : val === "false" ? false : null)),
+    .transform((val) => {
+      if (val === undefined || val === "") return null
+      return val === "true"
+    }),
+})
+
+export const pizzaItemSchema = z.object({
+  id: z.number(),
+  name: z.string(),
+  description: z.string(),
+  price: z.string(),
+  image: z.string(),
+  popular: z.boolean(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
 })
 
 export const itemsResponseSchema = z.object({
@@ -32,6 +31,6 @@ export const itemsResponseSchema = z.object({
   hasMore: z.boolean(),
 })
 
-export type PizzaItemType = z.infer<typeof pizzaItemSchema>
 export type ItemsQuery = z.infer<typeof itemsQuerySchema>
+export type PizzaItemType = z.infer<typeof pizzaItemSchema>
 export type ItemsResponse = z.infer<typeof itemsResponseSchema>

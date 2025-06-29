@@ -1,111 +1,62 @@
 "use client"
 
-import type React from "react"
+import { useState } from "react"
 import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Cart, type OrderItem } from "./cart"
-import type { PizzaItem } from "./item-card"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { customerInfoSchema, type CustomerInfo } from "@/lib/validations/forms"
+import { useCartStore } from "@/lib/stores/cart-store"
+import { Cart } from "./cart"
+import { ItemGrid } from "./item-grid"
 
-interface CustomerInfo {
-  name: string
-  email: string
-  phone: string
-}
+export function OrderForm() {
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const { items, getTotalPrice, clearCart } = useCartStore()
 
-interface OrderFormProps {
-  pizzaMenu: PizzaItem[]
-  selectedItems: OrderItem[]
-  customerInfo: CustomerInfo
-  onAddItem: (pizza: PizzaItem) => void
-  onRemoveItem: (pizzaId: string) => void
-  onCustomerInfoChange: (info: CustomerInfo) => void
-  onSubmit: (e: React.FormEvent) => void
-  getTotalPrice: () => number
-}
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<CustomerInfo>({
+    resolver: zodResolver(customerInfoSchema),
+  })
 
-export function OrderForm({
-  pizzaMenu,
-  selectedItems,
-  customerInfo,
-  onAddItem,
-  onRemoveItem,
-  onCustomerInfoChange,
-  onSubmit,
-  getTotalPrice,
-}: OrderFormProps) {
-  const handleInputChange = (field: keyof CustomerInfo, value: string) => {
-    onCustomerInfoChange({ ...customerInfo, [field]: value })
+  const onSubmit = async (data: CustomerInfo) => {
+    setIsSubmitting(true)
+
+    // Simulate order submission
+    await new Promise((resolve) => setTimeout(resolve, 2000))
+
+    console.log("Order submitted:", {
+      customer: data,
+      items,
+      total: getTotalPrice(),
+    })
+
+    alert(`Order submitted successfully! Total: $${getTotalPrice().toFixed(2)}`)
+    clearCart()
+    reset()
+    setIsSubmitting(false)
   }
 
   return (
-    <section id="order-form" className="py-16">
+    <section id="order-form" className="py-12 bg-gray-50">
       <div className="container mx-auto px-4">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">Place Your Order</h2>
-            <p className="text-xl text-gray-600">Fill in your details and select your favorite pizzas</p>
-          </div>
+        <h2 className="text-3xl font-bold text-center mb-8">Place Your Order</h2>
 
-          <form onSubmit={onSubmit} className="space-y-8">
+        <div className="max-w-6xl mx-auto">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
             {/* Pizza Selection */}
             <Card>
               <CardHeader>
                 <CardTitle>Select Your Pizzas</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-                  {pizzaMenu.map((pizza) => (
-                    <div key={pizza.id} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
-                      <img
-                        src={pizza.image || "/placeholder.svg"}
-                        alt={pizza.name}
-                        className="w-full h-32 object-cover rounded mb-3"
-                      />
-                      <h3 className="font-semibold mb-1">{pizza.name}</h3>
-                      <p className="text-sm text-gray-600 mb-2">{pizza.description}</p>
-                      <div className="flex justify-between items-center">
-                        <span className="font-bold text-red-600">${pizza.price}</span>
-                        {selectedItems.find((item) => item.id === pizza.id) ? (
-                          <div className="flex items-center gap-2">
-                            <Button
-                              type="button"
-                              size="sm"
-                              variant="outline"
-                              onClick={() => onRemoveItem(pizza.id)}
-                              className="h-8 w-8 p-0"
-                            >
-                              <span className="text-sm">-</span>
-                            </Button>
-                            <span className="font-semibold">
-                              {selectedItems.find((item) => item.id === pizza.id)?.quantity || 0}
-                            </span>
-                            <Button
-                              type="button"
-                              size="sm"
-                              onClick={() => onAddItem(pizza)}
-                              className="h-8 w-8 p-0 bg-red-600 hover:bg-red-700"
-                            >
-                              <span className="text-sm">+</span>
-                            </Button>
-                          </div>
-                        ) : (
-                          <Button
-                            type="button"
-                            size="sm"
-                            onClick={() => onAddItem(pizza)}
-                            className="bg-red-600 hover:bg-red-700"
-                          >
-                            <span className="text-sm">+</span>
-                          </Button>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                <Cart items={selectedItems} onAddItem={onAddItem} onRemoveItem={onRemoveItem} />
+                <ItemGrid limit={10} />
               </CardContent>
             </Card>
 
@@ -114,45 +65,41 @@ export function OrderForm({
               <CardHeader>
                 <CardTitle>Contact Information</CardTitle>
               </CardHeader>
-              <CardContent className="grid md:grid-cols-3 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="name">Full Name</Label>
-                  <Input
-                    id="name"
-                    value={customerInfo.name}
-                    onChange={(e) => handleInputChange("name", e.target.value)}
-                    placeholder="John Doe"
-                    required
-                  />
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="name">Full Name</Label>
+                    <Input id="name" {...register("name")} placeholder="Enter your full name" />
+                    {errors.name && <p className="text-red-600 text-sm mt-1">{errors.name.message}</p>}
+                  </div>
+                  <div>
+                    <Label htmlFor="phone">Phone Number</Label>
+                    <Input id="phone" {...register("phone")} placeholder="Enter your phone number" />
+                    {errors.phone && <p className="text-red-600 text-sm mt-1">{errors.phone.message}</p>}
+                  </div>
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    value={customerInfo.email}
-                    onChange={(e) => handleInputChange("email", e.target.value)}
-                    placeholder="john@example.com"
-                    required
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="phone">Phone Number</Label>
-                  <Input
-                    id="phone"
-                    type="tel"
-                    value={customerInfo.phone}
-                    onChange={(e) => handleInputChange("phone", e.target.value)}
-                    placeholder="(555) 123-4567"
-                    required
-                  />
+                <div>
+                  <Label htmlFor="email">Email Address</Label>
+                  <Input id="email" type="email" {...register("email")} placeholder="Enter your email address" />
+                  {errors.email && <p className="text-red-600 text-sm mt-1">{errors.email.message}</p>}
                 </div>
               </CardContent>
             </Card>
 
-            <Button type="submit" size="lg" className="w-full bg-red-600 hover:bg-red-700 text-lg py-6">
-              Place Order - ${getTotalPrice().toFixed(2)}
-            </Button>
+            {/* Order Summary */}
+            <Cart />
+
+            {/* Submit Button */}
+            <div className="text-center">
+              <Button
+                type="submit"
+                size="lg"
+                disabled={items.length === 0 || isSubmitting}
+                className="bg-red-600 hover:bg-red-700 text-white px-12 py-3 text-lg"
+              >
+                {isSubmitting ? "Placing Order..." : `Place Order - $${getTotalPrice().toFixed(2)}`}
+              </Button>
+            </div>
           </form>
         </div>
       </div>

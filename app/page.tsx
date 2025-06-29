@@ -2,49 +2,32 @@
 
 import { Hero } from "@/components/hero"
 import { ItemGrid } from "@/components/item-grid"
-import { OrderFormWithValidation } from "@/components/order-form-with-validation"
+import { OrderForm } from "@/components/order-form"
 import { Footer } from "@/components/footer"
-import { usePizzaItems } from "@/hooks/use-pizza-items"
-import { useCartStore } from "@/lib/stores/cart-store"
 
-export default function PizzaShopLanding() {
-  const { addItem, removeItem, getItemQuantity } = useCartStore()
-  const { data: popularData } = usePizzaItems({ popular: true, limit: 6 })
-
-  const handleOrderNowClick = () => {
-    document.getElementById("order-form")?.scrollIntoView({ behavior: "smooth" })
+export default function HomePage() {
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId)
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" })
+    }
   }
-
-  const handleViewMenuClick = () => {
-    document.getElementById("popular-menu")?.scrollIntoView({ behavior: "smooth" })
-  }
-
-  const selectedItemsForGrid =
-    popularData?.items.map((item) => ({
-      id: item.id,
-      quantity: getItemQuantity(item.id),
-    })) || []
 
   return (
-    <div className="min-h-screen bg-white">
-      <Hero onOrderNowClick={handleOrderNowClick} onViewMenuClick={handleViewMenuClick} />
+    <main className="min-h-screen">
+      <Hero
+        onOrderNowClick={() => scrollToSection("order-form")}
+        onViewMenuClick={() => scrollToSection("popular-menu")}
+      />
 
-      <div id="popular-menu">
-        {popularData && (
-          <ItemGrid
-            pizzas={popularData.items}
-            selectedItems={selectedItemsForGrid}
-            onAddItem={addItem}
-            onRemoveItem={removeItem}
-            title="Most Popular Pizzas"
-            description="Our customers' favorites - tried, tested, and absolutely delicious!"
-            variant="popular"
-          />
-        )}
-      </div>
+      <section id="popular-menu" className="py-12">
+        <div className="container mx-auto px-4">
+          <ItemGrid popular={true} limit={6} title="Most Popular Pizzas" variant="popular" />
+        </div>
+      </section>
 
-      <OrderFormWithValidation />
+      <OrderForm />
       <Footer />
-    </div>
+    </main>
   )
 }
