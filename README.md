@@ -49,18 +49,18 @@
 
 ### 1. Клонирование репозитория
 
-```bash
+\`\`\`bash
 git clone <repository-url>
 cd pizza-shop
-```
+\`\`\`
 
 ### 2. Установка зависимостей
 
-```bash
+\`\`\`bash
 npm install
 # или
 yarn install
-```
+\`\`\`
 
 ### 3. Настройка переменных окружения
 
@@ -69,18 +69,18 @@ yarn install
 - DATABASE_URL - ссылка на базу данных 
 - GMAIL_USER - твой gmail
 - GMAIL_PASSWORD - пароль который надо сгенерировать на сайте https://myaccount.google.com/apppasswords
-```env
+\`\`\`env
 # База данных
 DATABASE_URL="postgresql://username:password@localhost:5432/pizza_shop"
 
 # Email (Gmail)
 GMAIL_USER="your-email@gmail.com"
 GMAIL_PASSWORD="your-app-password"
-```
+\`\`\`
 
 ### 4. Настройка базы данных
 
-```bash
+\`\`\`bash
 # Генерация миграций
 npm run db:generate
 
@@ -89,11 +89,11 @@ npm run db:migrate
 
 # Заполнение тестовыми данными
 npm run db:seed
-```
+\`\`\`
 
 ### 5. Запуск проекта
 
-```bash
+\`\`\`bash
 # Режим разработки
 npm run dev
 
@@ -102,7 +102,7 @@ npm run build
 
 # Запуск продакшен версии
 npm run start
-```
+\`\`\`
 
 Приложение будет доступно по адресу: \`http://localhost:3000\`
 
@@ -122,7 +122,7 @@ npm run start
 
 ## 📁 Структура проекта
 
-```
+\`\`\`
 pizza-shop/
 ├── app/                          # Next.js App Router
 │   ├── api/                      # API маршруты
@@ -159,7 +159,7 @@ pizza-shop/
 │   └── seed.ts                   # Заполнение БД
 ├── drizzle/                      # Миграции БД
 └── public/                       # Статические файлы
-```
+\`\`\`
 
 ## 🌐 API Endpoints
 
@@ -176,7 +176,7 @@ pizza-shop/
 ### Заказы
 - **POST** \`/api/order\` - Создать заказ
   - Body:
-    ```json
+    \`\`\`json
     {
       "items": [
         {
@@ -188,7 +188,7 @@ pizza-shop/
       "phone": "+7 900 123 45 67",
       "email": "ivan@example.com"
     }
-    ```
+    \`\`\`
 
 ## 🧩 Компоненты
 
@@ -239,7 +239,7 @@ pizza-shop/
 ### Схема базы данных
 
 #### Таблица \`pizza_items\`
-```sql
+\`\`\`sql
 CREATE TABLE pizza_items (
   id SERIAL PRIMARY KEY,
   name TEXT NOT NULL,
@@ -250,10 +250,10 @@ CREATE TABLE pizza_items (
   created_at TIMESTAMP DEFAULT now() NOT NULL,
   updated_at TIMESTAMP DEFAULT now() NOT NULL
 );
-```
+\`\`\`
 
 #### Таблица \`orders\`
-```sql
+\`\`\`sql
 CREATE TABLE orders (
   id SERIAL PRIMARY KEY,
   full_name TEXT NOT NULL,
@@ -263,10 +263,10 @@ CREATE TABLE orders (
   created_at TIMESTAMP DEFAULT now() NOT NULL,
   updated_at TIMESTAMP DEFAULT now() NOT NULL
 );
-```
+\`\`\`
 
 #### Таблица \`order_items\`
-```sql
+\`\`\`sql
 CREATE TABLE order_items (
   order_id INTEGER REFERENCES orders(id) NOT NULL,
   item_id INTEGER REFERENCES pizza_items(id) NOT NULL,
@@ -274,11 +274,11 @@ CREATE TABLE order_items (
   created_at TIMESTAMP DEFAULT now() NOT NULL,
   updated_at TIMESTAMP DEFAULT now() NOT NULL
 );
-```
+\`\`\`
 
 ### Команды для работы с БД
 
-```bash
+\`\`\`bash
 # Генерация миграций
 npm run db:generate
 
@@ -296,7 +296,7 @@ npm run db:studio
 
 # Push схемы без миграций (для разработки)
 npm run db:push
-```
+\`\`\`
 
 ## 🚀 Развертывание
 
@@ -308,7 +308,7 @@ npm run db:push
 
 ### Docker
 
-```dockerfile
+\`\`\`dockerfile
 FROM node:18-alpine
 
 WORKDIR /app
@@ -322,19 +322,19 @@ RUN npm run build
 EXPOSE 3000
 
 CMD ["npm", "start"]
-```
+\`\`\`
 
 ### Переменные окружения для продакшена
 
-```env
+\`\`\`env
 DATABASE_URL="postgresql://user:password@host:5432/database"
 GMAIL_USER="your-production-email@gmail.com"
 GMAIL_PASSWORD="your-production-app-password"
-```
+\`\`\`
 
 ## 🔧 Скрипты package.json
 
-```json
+\`\`\`json
 {
   "scripts": {
     "dev": "next dev",
@@ -349,7 +349,7 @@ GMAIL_PASSWORD="your-production-app-password"
     "db:studio": "drizzle-kit studio"
   }
 }
-```
+\`\`\`
 
 ## 🤝 Участие в разработке
 
