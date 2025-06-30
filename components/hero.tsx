@@ -18,7 +18,7 @@ export function Hero({ onOrderNowClick, onViewMenuClick }: HeroProps) {
           <div className="order-1 md:order-2 flex justify-center">
             <div className="relative">
               <Image
-                src="/placeholder.svg?height=300&width=300"
+                src="https://pngimg.com/uploads/pizza/pizza_PNG7151.png"
                 alt="Delicious Pizza"
                 width={300}
                 height={300}
