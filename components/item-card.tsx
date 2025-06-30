@@ -10,10 +10,9 @@ import type { PizzaItemType } from "@/lib/validations/api"
 
 interface ItemCardProps {
   item: PizzaItemType
-  variant?: "popular" | "menu"
 }
 
-export function ItemCard({ item, variant = "menu" }: ItemCardProps) {
+export function ItemCard({ item }: ItemCardProps) {
   const { items, addItem, updateQuantity } = useCartStore()
   const cartItem = items.find((cartItem) => cartItem.id === item.id)
   const quantity = cartItem?.quantity || 0
@@ -41,7 +40,7 @@ export function ItemCard({ item, variant = "menu" }: ItemCardProps) {
           height={200}
           className="w-full h-48 object-cover"
         />
-        {variant === "popular" && item.popular && (
+        {item.popular && (
           <Badge className="absolute top-2 left-2 bg-red-600 hover:bg-red-700">Popular</Badge>
         )}
       </div>

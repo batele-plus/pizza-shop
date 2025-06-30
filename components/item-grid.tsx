@@ -6,17 +6,17 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 
 interface ItemGridProps {
-  popular?: boolean
-  limit?: number
-  title?: string
-  variant?: "popular" | "menu"
+  popular?: boolean;
+  limit: number;
+  offset?: number;
+  title?: string;
 }
 
-export function ItemGrid({ popular = null, limit = 10, title, variant = "menu" }: ItemGridProps) {
+export function ItemGrid({ popular, limit, offset, title }: ItemGridProps) {
   const { data, isLoading, error } = usePizzaItems({
     popular,
     limit,
-    offset: 0,
+    offset,
   })
 
   if (isLoading) {
@@ -61,7 +61,7 @@ export function ItemGrid({ popular = null, limit = 10, title, variant = "menu" }
       {title && <h2 className="text-2xl font-bold text-center">{title}</h2>}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {data.items.map((item) => (
-          <ItemCard key={item.id} item={item} variant={variant} />
+          <ItemCard key={item.id} item={item} />
         ))}
       </div>
     </div>

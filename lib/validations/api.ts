@@ -2,17 +2,15 @@ import { z } from "zod";
 
 export const itemsQuerySchema = z.object({
   limit: z
-    .string()
-    .transform((val) => Number(val))
+    .number()
+    .or(z.string().transform((val) => Number(val)))
     .pipe(z.number().min(1).max(100))
-    .nullable()
-    .default(null),
+    .default(10),
   offset: z
-    .string()
-    .transform((val) => Number(val))
+    .number()
+    .or(z.string().transform((val) => Number(val)))
     .pipe(z.number().min(0))
-    .nullable()
-    .default(null),
+    .default(0),
   popular: z
     .enum(["true", "false"])
     .transform((val) => {
@@ -34,19 +32,24 @@ export const pizzaItemSchema = z.object({
   updatedAt: z.date(),
 });
 
+export const pizzaItemResponseSchema = z.object({
+  items: z.array(pizzaItemSchema),
+  total: z.number(),
+  limit: z.number(),
+  offset: z.number(),
+  hasMore: z.boolean(),
+});
+
+export const apiErrorSchema = z.object({
+  error: z.string(),
+  message: z.string(),
+  details: z.any(),
+});
+
 export type ItemsQuery = z.infer<typeof itemsQuerySchema>;
+
 export type PizzaItemType = z.infer<typeof pizzaItemSchema>;
 
-export interface ItemsResponse {
-  items: PizzaItemType[];
-  total: number;
-  limit: number;
-  offset: number;
-  hasMore: boolean;
-}
+export type ItemsResponse = z.infer<typeof pizzaItemResponseSchema>;
 
-export interface ApiError {
-  error: string;
-  message: string;
-  details?: any;
-}
+export type ApiError = z.infer<typeof apiErrorSchema>;

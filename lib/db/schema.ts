@@ -1,4 +1,11 @@
-import { pgTable, serial, text, decimal, boolean, timestamp } from "drizzle-orm/pg-core"
+import {
+  pgTable,
+  serial,
+  text,
+  decimal,
+  boolean,
+  timestamp,
+} from "drizzle-orm/pg-core";
 
 export const pizzaItems = pgTable("pizza_items", {
   id: serial("id").primaryKey(),
@@ -9,7 +16,7 @@ export const pizzaItems = pgTable("pizza_items", {
   popular: boolean("popular").default(false).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
-})
+});
 
-export type PizzaItem = typeof pizzaItems.$inferSelect
-export type NewPizzaItem = typeof pizzaItems.$inferInsert
+export type PizzaItem = typeof pizzaItems.$inferSelect;
+export type NewPizzaItem = typeof pizzaItems.$inferInsert;

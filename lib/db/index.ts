@@ -1,15 +1,9 @@
-// Conditional database setup for build/runtime environments
-let db: any = null
+import { drizzle } from "drizzle-orm/postgres-js";
+import * as schema from "./schema";
+import { env } from "../env";
+import postgres from "postgres";
 
-import { neon } from "@neondatabase/serverless"
-import { drizzle } from "drizzle-orm/neon-http"
-import * as schema from "./schema"
+const sql = postgres(env.DATABASE_URL);
+const db = drizzle(sql, { schema });
 
-if (!process.env.DATABASE_URL) {
-  console.warn("DATABASE_URL is not set. Database operations will fail.")
-}
-
-const sql = neon(process.env.DATABASE_URL!)
-db = drizzle(sql, { schema })
-
-export { db }
+export { db };

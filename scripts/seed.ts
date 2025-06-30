@@ -1,9 +1,11 @@
-import { neon } from "@neondatabase/serverless"
-import { drizzle } from "drizzle-orm/neon-http"
-import { pizzaItems } from "../lib/db/schema"
+import "dotenv/config";
+import postgres from "postgres";
+import { drizzle } from "drizzle-orm/postgres-js";
+import { pizzaItems } from "../lib/db/schema";
+import { env } from "@/lib/env";
 
-const sql = neon(process.env.DATABASE_URL!)
-const db = drizzle(sql)
+const sql = postgres(env.DATABASE_URL);
+const db = drizzle(sql);
 
 const pizzaData = [
   {
@@ -90,36 +92,39 @@ const pizzaData = [
     image: "/placeholder.svg?height=300&width=300",
     popular: false,
   },
-]
+];
 
 async function seed() {
   try {
-    console.log("🌱 Starting database seed...")
+    console.log("🌱 Starting database seed...");
 
     // Clear existing data
-    console.log("🗑️  Clearing existing pizza items...")
-    await db.delete(pizzaItems)
+    console.log("🗑️  Clearing existing pizza items...");
+    await db.delete(pizzaItems);
 
     // Insert new data
-    console.log("📝 Inserting pizza items...")
-    const insertedItems = await db.insert(pizzaItems).values(pizzaData).returning()
+    console.log("📝 Inserting pizza items...");
+    const insertedItems = await db
+      .insert(pizzaItems)
+      .values(pizzaData)
+      .returning();
 
-    console.log(`✅ Successfully seeded ${insertedItems.length} pizza items!`)
+    console.log(`✅ Successfully seeded ${insertedItems.length} pizza items!`);
 
     // Show summary
-    const popularCount = insertedItems.filter((item) => item.popular).length
-    const regularCount = insertedItems.length - popularCount
+    const popularCount = insertedItems.filter((item) => item.popular).length;
+    const regularCount = insertedItems.length - popularCount;
 
-    console.log(`📊 Summary:`)
-    console.log(`   • Popular pizzas: ${popularCount}`)
-    console.log(`   • Regular pizzas: ${regularCount}`)
-    console.log(`   • Total pizzas: ${insertedItems.length}`)
+    console.log(`📊 Summary:`);
+    console.log(`   • Popular pizzas: ${popularCount}`);
+    console.log(`   • Regular pizzas: ${regularCount}`);
+    console.log(`   • Total pizzas: ${insertedItems.length}`);
 
-    process.exit(0)
+    process.exit(0);
   } catch (error) {
-    console.error("❌ Seed failed:", error)
-    process.exit(1)
+    console.error("❌ Seed failed:", error);
+    process.exit(1);
   }
 }
 
-seed()
+seed();

@@ -56,7 +56,7 @@ export function OrderForm() {
                 <CardTitle>Select Your Pizzas</CardTitle>
               </CardHeader>
               <CardContent>
-                <ItemGrid limit={10} />
+                <ItemGrid limit={100} />
               </CardContent>
             </Card>
 

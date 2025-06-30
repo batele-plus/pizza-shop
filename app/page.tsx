@@ -22,7 +22,7 @@ export default function HomePage() {
 
       <section id="popular-menu" className="py-12">
         <div className="container mx-auto px-4">
-          <ItemGrid popular={true} limit={6} title="Most Popular Pizzas" variant="popular" />
+          <ItemGrid popular={true} limit={6} title="Most Popular Pizzas" />
         </div>
       </section>
 
