@@ -40,15 +40,13 @@ export function ItemCard({ item }: ItemCardProps) {
           height={200}
           className="w-full h-48 object-cover object-top"
         />
-        {item.popular && (
-          <Badge className="absolute top-2 left-2 bg-red-600 hover:bg-red-700">Popular</Badge>
-        )}
+        {item.popular && <Badge className="absolute top-2 left-2 bg-red-600 hover:bg-red-700">Популярная</Badge>}
       </div>
       <CardContent className="p-4">
         <h3 className="font-semibold text-lg mb-2">{item.name}</h3>
         <p className="text-gray-600 text-sm mb-3 line-clamp-2">{item.description}</p>
         <div className="flex items-center justify-between">
-          <span className="text-xl font-bold text-red-600">${item.price}</span>
+          <span className="text-xl font-bold text-red-600">{item.price} ₽</span>
           {quantity > 0 ? (
             <div className="flex items-center gap-2">
               <Button
@@ -71,7 +69,7 @@ export function ItemCard({ item }: ItemCardProps) {
             </div>
           ) : (
             <Button onClick={handleAddToCart} size="sm">
-              Add to Order
+              Добавить в заказ
             </Button>
           )}
         </div>

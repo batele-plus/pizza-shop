@@ -1,130 +1,127 @@
-import "dotenv/config";
-import postgres from "postgres";
-import { drizzle } from "drizzle-orm/postgres-js";
-import { NewPizzaItem, pizzaItems } from "../lib/db/schema";
-import { env } from "@/lib/env";
+import "dotenv/config"
+import postgres from "postgres"
+import { drizzle } from "drizzle-orm/postgres-js"
+import { type NewPizzaItem, pizzaItems } from "../lib/db/schema"
+import { env } from "@/lib/env"
 
-const sql = postgres(env.DATABASE_URL);
-const db = drizzle(sql);
+const sql = postgres(env.DATABASE_URL)
+const db = drizzle(sql)
 
 const pizzaData: NewPizzaItem[] = [
   {
-    name: "Margherita Classic",
-    description: "Fresh mozzarella, tomato sauce, basil, olive oil",
-    price: "16.99",
+    name: "Маргарита Классическая",
+    description: "Свежая моцарелла, томатный соус, базилик, оливковое масло",
+    price: "599",
     image: "https://pngimg.com/uploads/pizza/pizza_PNG7151.png",
     popular: true,
   },
   {
-    name: "Pepperoni Supreme",
-    description: "Pepperoni, mozzarella, tomato sauce, oregano",
-    price: "19.99",
+    name: "Пепперони Супрем",
+    description: "Пепперони, моцарелла, томатный соус, орегано",
+    price: "699",
     image: "https://pngimg.com/uploads/pizza/pizza_PNG7151.png",
     popular: true,
   },
   {
-    name: "Meat Lovers",
-    description: "Pepperoni, sausage, bacon, ham, mozzarella",
-    price: "24.99",
+    name: "Мясная",
+    description: "Пепперони, колбаса, бекон, ветчина, моцарелла",
+    price: "899",
     image: "https://pngimg.com/uploads/pizza/pizza_PNG7151.png",
     popular: true,
   },
   {
-    name: "Hawaiian Paradise",
-    description: "Ham, pineapple, mozzarella, tomato sauce",
-    price: "20.99",
+    name: "Гавайская",
+    description: "Ветчина, ананас, моцарелла, томатный соус",
+    price: "749",
     image: "https://pngimg.com/uploads/pizza/pizza_PNG7151.png",
     popular: false,
   },
   {
-    name: "Veggie Supreme",
-    description: "Bell peppers, mushrooms, onions, olives, tomatoes",
-    price: "18.99",
+    name: "Овощная Супрем",
+    description: "Болгарский перец, грибы, лук, оливки, помидоры",
+    price: "649",
     image: "https://pngimg.com/uploads/pizza/pizza_PNG7151.png",
     popular: false,
   },
   {
-    name: "BBQ Chicken",
-    description: "Grilled chicken, BBQ sauce, red onions, cilantro",
-    price: "22.99",
+    name: "Барбекю с курицей",
+    description: "Курица гриль, соус барбекю, красный лук, кинза",
+    price: "799",
     image: "https://pngimg.com/uploads/pizza/pizza_PNG7151.png",
     popular: true,
   },
   {
-    name: "White Sauce Delight",
-    description: "White sauce, ricotta, mozzarella, garlic, spinach",
-    price: "21.99",
+    name: "Белый соус",
+    description: "Белый соус, рикотта, моцарелла, чеснок, шпинат",
+    price: "749",
     image: "https://pngimg.com/uploads/pizza/pizza_PNG7151.png",
     popular: false,
   },
   {
-    name: "Mediterranean",
-    description: "Feta cheese, olives, tomatoes, red onions, oregano",
-    price: "19.99",
+    name: "Средиземноморская",
+    description: "Сыр фета, оливки, помидоры, красный лук, орегано",
+    price: "699",
     image: "https://pngimg.com/uploads/pizza/pizza_PNG7151.png",
     popular: false,
   },
   {
-    name: "Buffalo Chicken",
-    description: "Buffalo chicken, blue cheese, celery, hot sauce",
-    price: "24.99",
+    name: "Буффало с курицей",
+    description: "Курица буффало, голубой сыр, сельдерей, острый соус",
+    price: "899",
     image: "https://pngimg.com/uploads/pizza/pizza_PNG7151.png",
     popular: false,
   },
   {
-    name: "Four Cheese",
-    description: "Mozzarella, parmesan, gorgonzola, fontina",
-    price: "20.99",
+    name: "Четыре сыра",
+    description: "Моцарелла, пармезан, горгонзола, фонтина",
+    price: "749",
     image: "https://pngimg.com/uploads/pizza/pizza_PNG7151.png",
     popular: false,
   },
   {
-    name: "Spicy Italian",
-    description: "Spicy salami, pepperoni, jalapeños, red pepper flakes",
-    price: "23.99",
+    name: "Острая итальянская",
+    description: "Острая салями, пепперони, халапеньо, красный перец",
+    price: "849",
     image: "https://pngimg.com/uploads/pizza/pizza_PNG7151.png",
     popular: true,
   },
   {
-    name: "Mushroom Truffle",
-    description: "Mixed mushrooms, truffle oil, arugula, parmesan",
-    price: "26.99",
+    name: "Грибная с трюфелем",
+    description: "Смесь грибов, трюфельное масло, руккола, пармезан",
+    price: "999",
     image: "https://pngimg.com/uploads/pizza/pizza_PNG7151.png",
     popular: false,
   },
-];
+]
 
 async function seed() {
   try {
-    console.log("🌱 Starting database seed...");
+    console.log("🌱 Начинаем заполнение базы данных...")
 
     // Clear existing data
-    console.log("🗑️  Clearing existing pizza items...");
-    await db.delete(pizzaItems);
+    console.log("🗑️  Очищаем существующие данные о пиццах...")
+    await db.delete(pizzaItems)
 
     // Insert new data
-    console.log("📝 Inserting pizza items...");
-    const insertedItems = await db
-      .insert(pizzaItems)
-      .values(pizzaData)
-      .returning();
+    console.log("📝 Добавляем пиццы...")
+    const insertedItems = await db.insert(pizzaItems).values(pizzaData).returning()
 
-    console.log(`✅ Successfully seeded ${insertedItems.length} pizza items!`);
+    console.log(`✅ Успешно добавлено ${insertedItems.length} пицц!`)
 
     // Show summary
-    const popularCount = insertedItems.filter((item) => item.popular).length;
-    const regularCount = insertedItems.length - popularCount;
+    const popularCount = insertedItems.filter((item) => item.popular).length
+    const regularCount = insertedItems.length - popularCount
 
-    console.log(`📊 Summary:`);
-    console.log(`   • Popular pizzas: ${popularCount}`);
-    console.log(`   • Regular pizzas: ${regularCount}`);
-    console.log(`   • Total pizzas: ${insertedItems.length}`);
+    console.log(`📊 Сводка:`)
+    console.log(`   • Популярных пицц: ${popularCount}`)
+    console.log(`   • Обычных пицц: ${regularCount}`)
+    console.log(`   • Всего пицц: ${insertedItems.length}`)
 
-    process.exit(0);
+    process.exit(0)
   } catch (error) {
-    console.error("❌ Seed failed:", error);
-    process.exit(1);
+    console.error("❌ Ошибка заполнения:", error)
+    process.exit(1)
   }
 }
 
-seed();
+seed()

@@ -19,26 +19,26 @@ export function Hero({ onOrderNowClick, onViewMenuClick }: HeroProps) {
             <div className="relative">
               <Image
                 src="https://pngimg.com/uploads/pizza/pizza_PNG7151.png"
-                alt="Delicious Pizza"
+                alt="Вкусная пицца"
                 width={300}
                 height={300}
                 className="w-64 h-64 sm:w-80 sm:h-80 md:w-96 md:h-96 object-cover rounded-full shadow-2xl"
                 priority
               />
               <div className="absolute -top-4 -right-4 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold animate-pulse">
-                Hot & Fresh!
+                Горячая и свежая!
               </div>
             </div>
           </div>
 
           <div className="order-2 md:order-1 flex-1 text-center md:text-left">
             <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-4">
-              Authentic Italian
-              <span className="text-red-600 block">Pizza Delivered</span>
+              Настоящая итальянская
+              <span className="text-red-600 block">пицца с доставкой</span>
             </h1>
             <p className="text-lg md:text-xl text-gray-600 mb-6 max-w-lg">
-              Experience the taste of Italy with our handcrafted pizzas made from the finest ingredients. Fast delivery,
-              guaranteed fresh!
+              Почувствуйте вкус Италии с нашей пиццей ручной работы из лучших ингредиентов. Быстрая доставка,
+              гарантированно свежая!
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start mb-8">
@@ -47,7 +47,7 @@ export function Hero({ onOrderNowClick, onViewMenuClick }: HeroProps) {
                 className="bg-red-600 hover:bg-red-700 text-white px-8 py-3 text-lg"
                 onClick={onOrderNowClick}
               >
-                Order Now
+                Заказать сейчас
               </Button>
               <Button
                 variant="outline"
@@ -55,7 +55,7 @@ export function Hero({ onOrderNowClick, onViewMenuClick }: HeroProps) {
                 className="border-red-600 text-red-600 hover:bg-red-50 px-8 py-3 text-lg bg-transparent"
                 onClick={onViewMenuClick}
               >
-                View Menu
+                Посмотреть меню
               </Button>
             </div>
 
@@ -69,9 +69,9 @@ export function Hero({ onOrderNowClick, onViewMenuClick }: HeroProps) {
                 <span className="font-semibold">4.9/5</span>
               </div>
               <div className="h-4 w-px bg-gray-300" />
-              <span>1000+ Happy Customers</span>
+              <span>1000+ довольных клиентов</span>
               <div className="h-4 w-px bg-gray-300" />
-              <span>30min Delivery</span>
+              <span>Доставка за 30 мин</span>
             </div>
           </div>
         </div>

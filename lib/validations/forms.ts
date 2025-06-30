@@ -1,30 +1,30 @@
-import { z } from "zod";
+import { z } from "zod"
 
 export const customerInfoSchema = z.object({
   name: z
     .string()
-    .min(2, "Name must be at least 2 characters")
-    .max(50, "Name must be less than 50 characters")
-    .regex(/^[a-zA-Z\s]+$/, "Name can only contain letters and spaces"),
-  email: z.string().email("Please enter a valid email address"),
-  phone: z.string().min(10, "Phone number must be at least 10 digits"),
-});
+    .min(2, "Имя должно содержать минимум 2 символа")
+    .max(50, "Имя должно содержать максимум 50 символов")
+    .regex(/^[а-яёА-ЯЁa-zA-Z\s]+$/, "Имя может содержать только буквы и пробелы"),
+  email: z.string().email("Пожалуйста, введите корректный адрес электронной почты"),
+  phone: z.string().min(10, "Номер телефона должен содержать минимум 10 цифр"),
+})
 
-export type CustomerInfo = z.infer<typeof customerInfoSchema>;
+export type CustomerInfo = z.infer<typeof customerInfoSchema>
 
 export const orderItemSchema = z.object({
   id: z.number(),
   name: z.string(),
   price: z.number(),
   quantity: z.number().min(1),
-});
+})
 
-export type OrderItem = z.infer<typeof orderItemSchema>;
+export type OrderItem = z.infer<typeof orderItemSchema>
 
 export const orderSchema = z.object({
   customerInfo: customerInfoSchema,
-  items: z.array(orderItemSchema).min(1, "Please select at least one pizza"),
+  items: z.array(orderItemSchema).min(1, "Пожалуйста, выберите хотя бы одну пиццу"),
   total: z.number().min(0),
-});
+})
 
-export type Order = z.infer<typeof orderSchema>;
+export type Order = z.infer<typeof orderSchema>

@@ -1,16 +1,16 @@
-import { z } from "zod";
+import { z } from "zod"
 
 export const placeOrderSchema = z.object({
   items: z.array(
     z.object({
       itemId: z.number(),
       quantity: z.number(),
-    })
+    }),
   ),
   fullName: z.string(),
-  phone: z.string().min(10, "Phone number must be at least 10 digits"),
+  phone: z.string().min(10, "Номер телефона должен содержать минимум 10 цифр"),
   email: z.string().email(),
-});
+})
 
 export const itemsQuerySchema = z.object({
   limit: z
@@ -26,12 +26,12 @@ export const itemsQuerySchema = z.object({
   popular: z
     .enum(["true", "false"])
     .transform((val) => {
-      if (val === "true") return true;
-      return false;
+      if (val === "true") return true
+      return false
     })
     .nullable()
     .default(null),
-});
+})
 
 export const pizzaItemSchema = z.object({
   id: z.number(),
@@ -42,7 +42,7 @@ export const pizzaItemSchema = z.object({
   popular: z.boolean(),
   createdAt: z.date(),
   updatedAt: z.date(),
-});
+})
 
 export const pizzaItemResponseSchema = z.object({
   items: z.array(pizzaItemSchema),
@@ -50,20 +50,20 @@ export const pizzaItemResponseSchema = z.object({
   limit: z.number(),
   offset: z.number(),
   hasMore: z.boolean(),
-});
+})
 
 export const apiErrorSchema = z.object({
   error: z.string(),
   message: z.string(),
   details: z.any(),
-});
+})
 
-export type ItemsQuery = z.infer<typeof itemsQuerySchema>;
+export type ItemsQuery = z.infer<typeof itemsQuerySchema>
 
-export type PizzaItemType = z.infer<typeof pizzaItemSchema>;
+export type PizzaItemType = z.infer<typeof pizzaItemSchema>
 
-export type ItemsResponse = z.infer<typeof pizzaItemResponseSchema>;
+export type ItemsResponse = z.infer<typeof pizzaItemResponseSchema>
 
-export type ApiError = z.infer<typeof apiErrorSchema>;
+export type ApiError = z.infer<typeof apiErrorSchema>
 
-export type PlaceOrderDto = z.infer<typeof placeOrderSchema>;
+export type PlaceOrderDto = z.infer<typeof placeOrderSchema>

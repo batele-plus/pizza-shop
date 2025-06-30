@@ -6,10 +6,10 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 
 interface ItemGridProps {
-  popular?: boolean;
-  limit: number;
-  offset?: number;
-  title?: string;
+  popular?: boolean
+  limit: number
+  offset?: number
+  title?: string
 }
 
 export function ItemGrid({ popular, limit, offset, title }: ItemGridProps) {
@@ -43,7 +43,7 @@ export function ItemGrid({ popular, limit, offset, title }: ItemGridProps) {
   if (error) {
     return (
       <Alert variant="destructive">
-        <AlertDescription>Failed to load pizza items. Please try again later.</AlertDescription>
+        <AlertDescription>Не удалось загрузить пиццы. Пожалуйста, попробуйте позже.</AlertDescription>
       </Alert>
     )
   }
@@ -51,7 +51,7 @@ export function ItemGrid({ popular, limit, offset, title }: ItemGridProps) {
   if (!data?.items?.length) {
     return (
       <div className="text-center py-8">
-        <p className="text-gray-500">No pizza items found.</p>
+        <p className="text-gray-500">Пиццы не найдены.</p>
       </div>
     )
   }
