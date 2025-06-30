@@ -16,7 +16,7 @@ export const getAllItemsRoute = createRoute({
   },
   responses: {
     200: {
-      description: "Инвойс успешно создан",
+      description: "Товары успешно получены",
       content: {
         "application/json": {
           schema: pizzaItemResponseSchema,
@@ -24,7 +24,7 @@ export const getAllItemsRoute = createRoute({
       },
     },
     500: {
-      description: "Ошибка создания инвойса",
+      description: "Ошибка получения товаров",
       content: {
         "application/json": {
           schema: apiErrorSchema,

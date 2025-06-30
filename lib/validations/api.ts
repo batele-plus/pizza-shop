@@ -1,5 +1,17 @@
 import { z } from "zod";
 
+export const placeOrderSchema = z.object({
+  items: z.array(
+    z.object({
+      itemId: z.number(),
+      quantity: z.number(),
+    })
+  ),
+  fullName: z.string(),
+  phone: z.string().min(10, "Phone number must be at least 10 digits"),
+  email: z.string().email(),
+});
+
 export const itemsQuerySchema = z.object({
   limit: z
     .number()
@@ -53,3 +65,5 @@ export type PizzaItemType = z.infer<typeof pizzaItemSchema>;
 export type ItemsResponse = z.infer<typeof pizzaItemResponseSchema>;
 
 export type ApiError = z.infer<typeof apiErrorSchema>;
+
+export type PlaceOrderDto = z.infer<typeof placeOrderSchema>;

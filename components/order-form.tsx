@@ -11,9 +11,16 @@ import { customerInfoSchema, type CustomerInfo } from "@/lib/validations/forms"
 import { useCartStore } from "@/lib/stores/cart-store"
 import { Cart } from "./cart"
 import { ItemGrid } from "./item-grid"
+import { usePlaceOrder } from '@/hooks/use-place-order'
 
 export function OrderForm() {
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const { mutate: placeOrder, isPending } = usePlaceOrder({
+    onSuccess(data) {
+      alert(`Order submitted successfully! Total: $${data.totalPrice.toFixed(2)}`)
+      clearCart()
+      reset()
+    }
+  })
   const { items, getTotalPrice, clearCart } = useCartStore()
 
   const {
@@ -22,26 +29,27 @@ export function OrderForm() {
     formState: { errors },
     reset,
   } = useForm<CustomerInfo>({
+    defaultValues: {
+      email: "",
+      phone: "",
+      name: "",
+    },
     resolver: zodResolver(customerInfoSchema),
   })
 
   const onSubmit = async (data: CustomerInfo) => {
-    setIsSubmitting(true)
-
-    // Simulate order submission
-    await new Promise((resolve) => setTimeout(resolve, 2000))
-
-    console.log("Order submitted:", {
-      customer: data,
-      items,
-      total: getTotalPrice(),
+    placeOrder({
+      items: items.map((item) => ({
+        itemId: item.id,
+        quantity: item.quantity,
+      })),
+      fullName: data.name,
+      phone: data.phone,
+      email: data.email,
     })
-
-    alert(`Order submitted successfully! Total: $${getTotalPrice().toFixed(2)}`)
-    clearCart()
-    reset()
-    setIsSubmitting(false)
   }
+
+  const disabled = items.length === 0 || isPending;
 
   return (
     <section id="order-form" className="py-12 bg-red-500/10">
@@ -94,10 +102,10 @@ export function OrderForm() {
               <Button
                 type="submit"
                 size="lg"
-                disabled={items.length === 0 || isSubmitting}
+                disabled={disabled}
                 className="bg-red-600 hover:bg-red-700 text-white px-12 py-3 text-lg"
               >
-                {isSubmitting ? "Placing Order..." : `Place Order - $${getTotalPrice().toFixed(2)}`}
+                {isPending ? "Placing Order..." : `Place Order - $${getTotalPrice().toFixed(2)}`}
               </Button>
             </div>
           </form>

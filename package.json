@@ -60,6 +60,7 @@
     "lucide-react": "^0.454.0",
     "next": "14.2.16",
     "next-themes": "latest",
+    "nodemailer": "^7.0.4",
     "pg": "latest",
     "postgres": "^3.4.7",
     "react": "^18",
@@ -77,6 +78,7 @@
   },
   "devDependencies": {
     "@types/node": "^22",
+    "@types/nodemailer": "^6.4.17",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "autoprefixer": "^10.0.1",
