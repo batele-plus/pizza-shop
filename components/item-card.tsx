@@ -38,7 +38,7 @@ export function ItemCard({ item }: ItemCardProps) {
           alt={item.name}
           width={300}
           height={200}
-          className="w-full h-48 object-cover"
+          className="w-full h-48 object-cover object-top"
         />
         {item.popular && (
           <Badge className="absolute top-2 left-2 bg-red-600 hover:bg-red-700">Popular</Badge>
