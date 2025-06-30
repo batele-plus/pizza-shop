@@ -44,7 +44,7 @@ export function OrderForm() {
   }
 
   return (
-    <section id="order-form" className="py-12 bg-gray-50">
+    <section id="order-form" className="py-12 bg-red-500/10">
       <div className="container mx-auto px-4">
         <h2 className="text-3xl font-bold text-center mb-8">Place Your Order</h2>
 
