@@ -14,7 +14,7 @@ export function ApiExample() {
   const [offset, setOffset] = useState(0)
   const [popular, setPopular] = useState<boolean | null>(null)
 
-  const { items, loading, error, total, hasMore, refetch } = usePizzaItems({
+  const { data, isLoading, error, refetch } = usePizzaItems({
     limit,
     offset,
     popular,
@@ -81,15 +81,15 @@ export function ApiExample() {
             </div>
 
             <div className="flex flex-col justify-end">
-              <Button onClick={refetch} disabled={loading}>
-                {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              <Button onClick={() => refetch()} disabled={isLoading}>
+                {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 Refresh
               </Button>
             </div>
           </div>
 
           <div className="text-sm text-gray-600">
-            Showing {offset + 1}-{Math.min(offset + limit, total)} of {total} items
+            Showing {offset + 1}-{Math.min(offset + limit, data?.total ?? 0)} of {data?.total ?? 0} items
           </div>
         </CardContent>
       </Card>
@@ -97,12 +97,12 @@ export function ApiExample() {
       {error && (
         <Card className="mb-8 border-red-200">
           <CardContent className="pt-6">
-            <div className="text-red-600">Error: {error}</div>
+            <div className="text-red-600">Error: {error.message}</div>
           </CardContent>
         </Card>
       )}
 
-      {loading ? (
+      {isLoading ? (
         <div className="flex justify-center items-center py-12">
           <Loader2 className="h-8 w-8 animate-spin" />
           <span className="ml-2">Loading pizza items...</span>
@@ -110,7 +110,7 @@ export function ApiExample() {
       ) : (
         <>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-            {items.map((item) => (
+            {data?.items.map((item) => (
               <Card key={item.id} className="overflow-hidden">
                 <img src={item.image || "/placeholder.svg"} alt={item.name} className="w-full h-48 object-cover" />
                 <CardHeader>
@@ -136,7 +136,7 @@ export function ApiExample() {
 
             <span className="text-sm text-gray-600">Page {Math.floor(offset / limit) + 1}</span>
 
-            <Button onClick={handleNextPage} disabled={!hasMore} variant="outline">
+            <Button onClick={handleNextPage} disabled={!data?.hasMore} variant="outline">
               Next
             </Button>
           </div>

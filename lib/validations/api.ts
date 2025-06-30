@@ -1,33 +1,27 @@
-import { z } from "zod"
+import { z } from "zod";
 
 export const itemsQuerySchema = z.object({
   limit: z
     .string()
-	.transform((val)=>Number(val))
-	.pipe(
-		z.number()
-		.min(1)
-		.max(100)
-	)
+    .transform((val) => Number(val))
+    .pipe(z.number().min(1).max(100))
     .nullable()
-	.default(0),
+    .default(null),
   offset: z
     .string()
-	.transform((val)=>Number(val))
-	.pipe(
-		z.number()
-		.min(0)
-	)
+    .transform((val) => Number(val))
+    .pipe(z.number().min(0))
     .nullable()
-	.default(0),
-  popular: z.enum(["true","false"])
+    .default(null),
+  popular: z
+    .enum(["true", "false"])
     .transform((val) => {
-      if (val === "true") return true
-	  return false
+      if (val === "true") return true;
+      return false;
     })
-	.nullable()
-	.default(null),
-})
+    .nullable()
+    .default(null),
+});
 
 export const pizzaItemSchema = z.object({
   id: z.number(),
@@ -38,21 +32,21 @@ export const pizzaItemSchema = z.object({
   popular: z.boolean(),
   createdAt: z.date(),
   updatedAt: z.date(),
-})
+});
 
-export type ItemsQuery = z.infer<typeof itemsQuerySchema>
-export type PizzaItemType = z.infer<typeof pizzaItemSchema>
+export type ItemsQuery = z.infer<typeof itemsQuerySchema>;
+export type PizzaItemType = z.infer<typeof pizzaItemSchema>;
 
 export interface ItemsResponse {
-  items: PizzaItemType[]
-  total: number
-  limit: number
-  offset: number
-  hasMore: boolean
+  items: PizzaItemType[];
+  total: number;
+  limit: number;
+  offset: number;
+  hasMore: boolean;
 }
 
 export interface ApiError {
-  error: string
-  message: string
-  details?: any
+  error: string;
+  message: string;
+  details?: any;
 }
