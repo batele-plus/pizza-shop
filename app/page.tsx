@@ -1,48 +1,33 @@
 "use client"
 
-import { useState } from "react"
-
-import { Header } from "@/components/header"
-import { HeroSection } from "@/components/hero-section"
-import { StatsSection } from "@/components/stats-section"
-import { ServicesSection } from "@/components/services-section"
-import { AboutSection } from "@/components/about-section"
-import { TeamSection } from "@/components/team-section"
-import { CasesSection } from "@/components/cases-section"
-import { FaqSection } from "@/components/faq-section"
-import { ContactSection } from "@/components/contact-section"
+import { Hero } from "@/components/hero"
+import { ItemGrid } from "@/components/item-grid"
+import { OrderForm } from "@/components/order-form"
 import { Footer } from "@/components/footer"
-import { ServiceOrderModal } from "@/components/service-order-modal"
 
-export default function DominantJusticeLanding() {
-  const [modalOpen, setModalOpen] = useState(false)
-  const [selectedService, setSelectedService] = useState({ name: "", price: "" })
-
-  const handleOrderService = (serviceName: string, servicePrice: string) => {
-    setSelectedService({ name: serviceName, price: servicePrice })
-    setModalOpen(true)
+export default function HomePage() {
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId)
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" })
+    }
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-white">
-      <Header />
-      <main className="flex-1">
-        <HeroSection />
-        <StatsSection />
-        <ServicesSection onOrderService={handleOrderService} />
-        <AboutSection />
-        <TeamSection />
-        <CasesSection />
-        <FaqSection />
-        <ContactSection />
-      </main>
-      <Footer />
-      <ServiceOrderModal
-        isOpen={modalOpen}
-        onClose={() => setModalOpen(false)}
-        serviceName={selectedService.name}
-        servicePrice={selectedService.price}
+    <main className="min-h-screen">
+      <Hero
+        onOrderNowClick={() => scrollToSection("order-form")}
+        onViewMenuClick={() => scrollToSection("popular-menu")}
       />
-    </div>
+
+      <section id="popular-menu" className="py-12">
+        <div className="container mx-auto px-4">
+          <ItemGrid popular={true} limit={6} title="Самые популярные пиццы" />
+        </div>
+      </section>
+
+      <OrderForm />
+      <Footer />
+    </main>
   )
 }

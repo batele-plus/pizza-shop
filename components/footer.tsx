@@ -1,97 +1,77 @@
-"use client"
-
-import { Button } from "@/components/ui/button"
-import { Phone, Mail, MapPin } from "lucide-react"
-import Image from "next/image"
-import Link from "next/link"
-import { useLanguage } from "@/contexts/language-context"
+import { Phone, Mail, MapPin, Clock } from "lucide-react"
 
 export function Footer() {
-  const { t } = useLanguage()
-
   return (
-    <footer className="bg-navy-900 border-t border-gold-400/30">
-      <div className="container px-4 md:px-6 py-12">
-        <div className="grid gap-8 lg:grid-cols-5">
-          <div className="lg:col-span-2 space-y-4">
-            <div className="flex items-center space-x-3">
-              <Image src="/logo-2.svg" alt="DOMINANT JUSTICE" width={120} height={40} className="h-8 w-auto" />
-            </div>
-            <p className="text-slate-400 leading-relaxed max-w-md">{t("footer.description")}</p>
-            <div className="flex space-x-4">
-              <Button size="sm" className="bg-green-600 hover:bg-green-700 text-white rounded-full">
-                WhatsApp
-              </Button>
-              <Button size="sm" className="bg-blue-600 hover:bg-blue-700 text-white rounded-full">
-                Telegram
-              </Button>
-            </div>
-          </div>
-          <div className="space-y-4">
-            <h4 className="text-lg font-semibold text-white">{t("footer.services.title")}</h4>
-            <div className="space-y-2">
-              <Link href="#" className="block text-slate-400 hover:text-gold-400 transition-colors duration-300">
-                {t("footer.services.corporate")}
-              </Link>
-              <Link href="#" className="block text-slate-400 hover:text-gold-400 transition-colors duration-300">
-                {t("footer.services.tax")}
-              </Link>
-              <Link href="#" className="block text-slate-400 hover:text-gold-400 transition-colors duration-300">
-                {t("footer.services.court")}
-              </Link>
-              <Link href="#" className="block text-slate-400 hover:text-gold-400 transition-colors duration-300">
-                {t("footer.services.accounting")}
-              </Link>
-            </div>
-          </div>
-          <div className="space-y-4">
-            <h4 className="text-lg font-semibold text-white">{t("footer.company.title")}</h4>
-            <div className="space-y-2">
-              <Link href="#about" className="block text-slate-400 hover:text-gold-400 transition-colors duration-300">
-                {t("footer.company.about")}
-              </Link>
-              <Link href="#team" className="block text-slate-400 hover:text-gold-400 transition-colors duration-300">
-                {t("footer.company.team")}
-              </Link>
-              <Link href="#cases" className="block text-slate-400 hover:text-gold-400 transition-colors duration-300">
-                {t("footer.company.cases")}
-              </Link>
-              <Link href="#" className="block text-slate-400 hover:text-gold-400 transition-colors duration-300">
-                {t("footer.company.career")}
-              </Link>
-            </div>
-          </div>
-          <div className="space-y-4">
-            <h4 className="text-lg font-semibold text-white">{t("footer.contacts.title")}</h4>
-            <div className="space-y-2 text-slate-400">
-              <div className="flex items-center space-x-2">
-                <Phone className="h-4 w-4 text-gold-400" />
-                <span className="text-gold-400 font-semibold">+996 (555) 123-456</span>
+    <footer className="bg-gray-900 text-white py-12">
+      <div className="container mx-auto px-4">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          {/* Contact Info */}
+          <div>
+            <h3 className="text-xl font-bold mb-4">Свяжитесь с нами</h3>
+            <div className="space-y-3">
+              <div className="flex items-center gap-3">
+                <Phone className="w-5 h-5 text-red-500" />
+                <span>+7 (555) 123-ПИЦЦА</span>
               </div>
-              <div className="flex items-center space-x-2">
-                <Mail className="h-4 w-4 text-gold-400" />
-                <span>info@dominantjustice.kg</span>
+              <div className="flex items-center gap-3">
+                <Mail className="w-5 h-5 text-red-500" />
+                <span>orders@pizzashop.ru</span>
               </div>
-              <div className="flex items-start space-x-2">
-                <MapPin className="h-4 w-4 text-gold-400 mt-0.5" />
+              <div className="flex items-center gap-3">
+                <MapPin className="w-5 h-5 text-red-500" />
+                <span>ул. Пиццы, 123, Москва, 123456</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Hours */}
+          <div>
+            <h3 className="text-xl font-bold mb-4">Часы работы</h3>
+            <div className="space-y-2">
+              <div className="flex items-center gap-3">
+                <Clock className="w-5 h-5 text-red-500" />
                 <div>
-                  <div>г. Бишкек, ул. Чуй 123</div>
-                  <div>Бизнес-центр "Элит", 15 этаж</div>
+                  <p>Пн-Чт: 11:00 - 22:00</p>
+                  <p>Пт-Сб: 11:00 - 23:00</p>
+                  <p>Воскресенье: 12:00 - 21:00</p>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <div className="border-t border-gold-400/30 mt-8 pt-8 flex flex-col sm:flex-row justify-between items-center">
-          <p className="text-sm text-slate-400">{t("footer.rights")}</p>
-          <div className="flex gap-6 mt-4 sm:mt-0">
-            <Link href="#" className="text-sm text-slate-400 hover:text-gold-400 transition-colors duration-300">
-              {t("footer.privacy")}
-            </Link>
-            <Link href="#" className="text-sm text-slate-400 hover:text-gold-400 transition-colors duration-300">
-              {t("footer.terms")}
-            </Link>
+
+          {/* Quick Links */}
+          <div>
+            <h3 className="text-xl font-bold mb-4">Быстрые ссылки</h3>
+            <div className="space-y-2">
+              <a href="#menu" className="block hover:text-red-400 transition-colors">
+                Меню
+              </a>
+              <a href="#order" className="block hover:text-red-400 transition-colors">
+                Заказать онлайн
+              </a>
+              <a href="#about" className="block hover:text-red-400 transition-colors">
+                О нас
+              </a>
+              <a href="#contact" className="block hover:text-red-400 transition-colors">
+                Контакты
+              </a>
+            </div>
           </div>
+
+          {/* Delivery Promise */}
+          <div>
+            <h3 className="text-xl font-bold mb-4">Наши обещания</h3>
+            <div className="space-y-2 text-sm">
+              <p>🍕 Свежие ингредиенты каждый день</p>
+              <p>⚡ Доставка за 30 минут</p>
+              <p>⭐ Рейтинг клиентов 4.9/5</p>
+              <p>💯 100% гарантия качества</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="border-t border-gray-800 mt-8 pt-8 text-center">
+          <p>&copy; 2024 Пиццерия. Все права защищены.</p>
         </div>
       </div>
     </footer>

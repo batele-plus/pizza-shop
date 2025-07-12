@@ -2,13 +2,13 @@ import type React from "react"
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import "./globals.css"
-import { LanguageProvider } from "@/contexts/language-context"
+import { Providers } from "@/components/providers"
 
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "DOMINANT JUSTICE - Юридические услуги",
-  description: "Профессиональные юридические услуги для бизнеса и частных лиц",
+  title: "Mario's Pizza - Authentic Italian Pizza",
+  description: "Hand-tossed dough, premium ingredients, and traditional recipes",
     generator: 'v0.dev'
 }
 
@@ -18,9 +18,9 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="ru">
+    <html lang="en">
       <body className={inter.className}>
-        <LanguageProvider>{children}</LanguageProvider>
+        <Providers>{children}</Providers>
       </body>
     </html>
   )
